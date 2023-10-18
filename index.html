@@ -5,8 +5,8 @@
 <title>实时绘画摄像头数据</title>
 </head>
 <body>
-<video id=“video” width=“640” height=“480” autoplay></video>
-<canvas id=“canvas” width=“640” height=“480”></canvas>
+<video id="video" width="640" height="480" autoplay></video>
+<canvas id="canvas" width="640" height="480"></canvas>
 <script>
     var video = document.getElementById('video');
     var canvas = document.getElementById('canvas');
@@ -29,6 +29,6 @@
     video.addEventListener('play', function() {
         requestAnimationFrame(draw);
     });
-    </script>
+</script>
 </body>
 </html>
