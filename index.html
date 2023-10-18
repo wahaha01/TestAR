@@ -23,10 +23,7 @@
     let canvas = document.querySelector('canvas');
     function openx() {
         let constraints = {
-            video: {            //这里是摄像头的信息
-                height: 500,
-                width: 500
-            },
+            video: true         //这里是摄像头的信息
         // audio: true,  //是否开启麦克风
         }
         let isok = navigator.mediaDevices.getUserMedia(constraints); //这里主要是用于请求用户打开摄像头的权限
