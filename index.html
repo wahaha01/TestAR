@@ -56,7 +56,9 @@
     } else {
       alert('不支持访问用户媒体');
     }
-
+    window.setInterval(function(){
+        context.drawImage(video, 0, 0, 375, 180);
+    },15);
     document.getElementById('capture').addEventListener('click', function () {
       context.drawImage(video, 0, 0, 480, 320);      
     })
