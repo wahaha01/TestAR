@@ -43,10 +43,7 @@
 
     //   video.src = CompatibleURL.createObjectURL(stream);
       video.srcObject = stream;
-    //   video.play();
-        video.onloadedmetadata = function(e) {
-        video.play();
-        };
+      video.play();
     }
 
     function error(error) {
