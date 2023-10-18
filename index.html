@@ -1,112 +1,164 @@
-<!-- 
 <!DOCTYPE html>
 <html lang="en">
- 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Title</title>
 </head>
- 
 <body>
-    <video width="500" height="500" autoplay class="video"></video>
-    <canvas width="500" height="500"></canvas>
-    <button onclick="openx()">调用摄像头</button>
-    <button onclick="pho()">拍照</button>
-    <button onclick="exit()">关闭摄像头</button>
-</body>
+<input type="button" title="开启摄像头" value="开启摄像头" onclick="getMedia();"/><br/>
  
-</html>
-<script>
-    let video = document.querySelector('.video');
-    let canvas = document.querySelector('canvas');
-    function openx() {
-        let constraints = {
-            video: true         //这里是摄像头的信息
-        // audio: true,  //是否开启麦克风
+<video height="400px" autoplay="autoplay" style='border: 1px solid #f00;'></video>
+<hr/>
+ 
+<input type="button" title="拍照" value="拍照" onclick="getPhoto();"/><br/>
+ 
+<canvas id="canvas1" height="400px" style='border: 1px solid #f00;'></canvas>
+<hr/>
+ 
+<input type="button" title="视频" value="视频" onclick="getVedio();"/><br/>
+ 
+<canvas id="canvas2" height="400px" style='border: 1px solid #f00;'></canvas>
+ 
+ 
+<script type="text/javascript">
+   var  videoHeight;
+   var videoWidth;
+    var video = document.querySelector('video');
+    var audio, audioType;
+    var canvas1 = document.getElementById('canvas1');
+    var context1 = canvas1.getContext('2d');
+    var canvas2 = document.getElementById('canvas2');
+    var context2 = canvas2.getContext('2d');
+ 
+    navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
+    window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
+    var exArray = []; //存储设备源ID
+    try {
+        MediaStreamTrack.getSources(function (sourceInfos) {
+            for (var i = 0; i != sourceInfos.length; ++i) {
+                var sourceInfo = sourceInfos[i];
+                    //这里会遍历audio,video，所以要加以区分
+                if (sourceInfo.kind === 'video') {
+                    exArray.push(sourceInfo.id);
+                }
+            }
+        });
+    } catch (e) {
+        console.log(e)
+    }
+ 
+    function getMedia() {
+        if (navigator.getUserMedia) {
+            navigator.getUserMedia({
+                'video': {
+                    'optional': [{
+                        'sourceId': exArray[0] //0为前置摄像头，1为后置
+                    }]
+                },
+                'audio': true
+            }, successFunc, errorFunc); //success是获取成功的回调函数
+        } else {
+            /**
+             * 测试ios手机及笔记本，微信及浏览器， 有趣的是navigator有getUserMedia这个属性，但值为均为undefined
+             *时间  20191120
+             *
+             * */
+            alert('Native device media streaming (getUserMedia) not supported in this browser.');
         }
-        let isok = navigator.mediaDevices.getUserMedia(constraints); //这里主要是用于请求用户打开摄像头的权限
-        isok.then(res => {     //可以看出是使用promise封装的 那么我们就可以使用then和catch
-            video.srcObject = res;    //用户允许时 将摄像头对象的画面转移到video上面
-            video.play();                //打开video的画面
-        }).catch((err) => {
-            console.log(err)            //拒绝时打印错误信息
-        })
     }
-    function pho() {
-        canvas.getContext("2d").drawImage(video, 0, 0, 300, 300);   //第一个参数为要截取的dom对象，第二个和第三个为xy轴的偏移值    3-4为截取图像的大小
+ 
+    function successFunc(stream) {
+//alert('Succeed to get media!');
+        console.log(stream);
+        if (video.mozSrcObject !== undefined) {
+//Firefox中，video.mozSrcObject最初为null，而不是未定义的，我们可以靠这个来检测Firefox的支持
+            video.mozSrcObject = stream;
+        } else {
+            try {
+                video.src = window.URL && window.URL.createObjectURL(stream) || stream;
+            } catch (e) {
+                /**
+                 * 之前工作的网页调用摄像头获取视频并拍照的作品报错：
+                 Failed to execute 'createObjectURL' on 'URL'
+                 原因是Chrome升级后，新版本的Chrome不再支持该用法。
+                 其他主流浏览器也是如此，详细讨论请参考如下链接：
+                 https://www.fxsitecompat.com/en-CA/docs/2017/url-createobjecturl-stream-has-been-deprecated/
+                 * */
+                try {
+                    video.srcObject = stream;
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+ 
+ 
+        }
+//video.play();
+// 音频
+        audio = new Audio();
+        audioType = getAudioType(audio);
+        if (audioType) {
+            audio.src = 'polaroid.' + audioType;
+            audio.play();
+        }
+        video.onplay=function (ev) {
+            videoHeight=video.videoHeight;
+            videoWidth=video.videoWidth;
+            console.log(videoHeight)
+            console.log(videoWidth)
+            canvas1.width=videoWidth;
+            canvas1.height=videoHeight;
+            canvas2.width=videoWidth;
+            canvas2.height=videoHeight;
+        }
+ 
     }
-    function exit() {
-        video.srcObject.getTracks()[0].stop();   //这里如果打开了麦克风、getTracks是一个数组，我们同样需要获取下标[1]来关闭摄像头 打开麦克风[0]就是麦克风
+ 
+    function errorFunc(e) {
+        alert('Error！' + e);
     }
-</script> -->
-
-
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>摄像头拍照</title>
-</head>
-<body>
-  <video id="video" width="480" height="320" controls>
-  </video>
-  <div>
-    <button id="capture">拍照</button>
-  </div>
-  <canvas id="canvas" width="480" height="320"></canvas>
-  <script>
-    //访问用户媒体设备的兼容方法
-    function getUserMedia(constraints, success, error) {
-      if (navigator.mediaDevices.getUserMedia) {
-        //最新的标准API
-        navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
-      } else if (navigator.webkitGetUserMedia) {
-        //webkit核心浏览器
-        navigator.webkitGetUserMedia(constraints,success, error)
-      } else if (navigator.mozGetUserMedia) {
-        //firfox浏览器
-        navigator.mozGetUserMedia(constraints, success, error);
-      } else if (navigator.getUserMedia) {
-        //旧版API
-        navigator.getUserMedia(constraints, success, error);
-      }
+ 
+    var img = new Image();
+    img.src = "./imgs/shabi.png";
+    img.onload = function (ev) {
+        context1.drawImage(img, 0, 0);
+        context2.drawImage(img, 0, 0);
     }
-
-    let video = document.getElementById('video');
-    let canvas = document.getElementById('canvas');
-    let context = canvas.getContext('2d');
-
-    function success(stream) {
-      //兼容webkit核心浏览器
-      let CompatibleURL = window.URL || window.webkitURL;
-      //将视频流设置为video元素的源
-      console.log(stream);
-
-      //video.src = CompatibleURL.createObjectURL(stream);
-      video.srcObject = stream;
-      video.play();
+ 
+    // 将视频帧绘制到Canvas对象上,Canvas每60ms切换帧，形成肉眼视频效果
+    function drawVideoAtCanvas(video, context) {
+        window.setInterval(function () {
+            context.drawImage(video, 0, 0);
+            context.drawImage(img, 0, 0);
+ 
+        }, 60);
     }
-
-    function error(error) {
-      console.log(`访问用户媒体设备失败${error.name}, ${error.message}`);
+ 
+    //获取音频格式
+    function getAudioType(element) {
+        if (element.canPlayType) {
+            if (element.canPlayType('audio/mp4; codecs="mp4a.40.5"') !== '') {
+                return ('aac');
+            } else if (element.canPlayType('audio/ogg; codecs="vorbis"') !== '') {
+                return ("ogg");
+            }
+        }
+        return false;
     }
-
-    if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {
-      //调用用户媒体设备, 访问摄像头
-      getUserMedia({video : {width: 480, height: 320}}, success, error);
-    } else {
-      alert('不支持访问用户媒体');
+ 
+    // vedio播放时触发，绘制vedio帧图像到canvas
+    // video.addEventListener('play', function () {
+    // drawVideoAtCanvas(video, context2);
+    // }, false);
+    //拍照
+    function getPhoto() {
+        context1.drawImage(video, 0, 0); //将video对象内指定的区域捕捉绘制到画布上指定的区域，实现拍照。
+        context1.drawImage(img, 0, 0);
     }
-
-    document.getElementById('capture').addEventListener('click', function () {
-      context.drawImage(video, 0, 0, 480, 320);      
-    })
-  </script>
+ 
+    //视频
+    function getVedio() {
+        drawVideoAtCanvas(video, context2);
+    }
+</script>
 </body>
-</html>
