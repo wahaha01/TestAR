@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,7 @@
   <title>摄像头拍照</title>
 </head>
 <body>
-  <video id="video" width="480" height="320" autoplay>
+  <video id="video" width="480" height="320" autoplay controls>
   </video>
   <div>
     <button id="capture">拍照</button>
@@ -70,32 +70,5 @@
       context.drawImage(video, 0, 0, 480, 320);      
     })
   </script>
-</body>
-</html> -->
-
-
-<!doctype html>
-<html lang="en">
-<head>
-    <title>唤起相机拍照</title>
-    <meta charset="utf-8">
-</head>
-<body>
-    <input type="button" title="开启摄像头" value="开启摄像头" onclick="getMedia ()" />
-    <video id="video" width="500px" height="500px" autoplay="autoplay"></video>
-    <script>
-        function getMedia() {
-            let constraints = {
-                video: { width: 500, height: 500 },
-                audio: true
-            };
-            let video = document.getElementById("video");
-            let promise = navigator.mediaDevices.getUserMedia(constraints);
-            promise.then(function (MediaStream) {
-                video.srcObject = MediaStream;
-                video.play();
-            });
-        }
-    </script>
 </body>
 </html>
