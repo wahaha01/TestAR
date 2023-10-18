@@ -18,7 +18,7 @@
   <div>
     <button id="capture">拍照</button>
   </div>
-  <canvas id="canvas" width="480" height="320"></canvas>
+  <canvas id="canvas" width="1920" height="1080"></canvas>
   <script>
     //访问用户媒体设备的兼容方法
     function getUserMedia(constraints, success, error) {
@@ -65,11 +65,11 @@
       alert('不支持访问用户媒体');
     }
 
-    function render() {  
-        context.drawImage(video, 0, 0, 480, 320);  
-        window.requestAnimationFrame(render);
-        }
-    window.requestAnimationFrame(render);
+    // function render() {  
+    //     context.drawImage(video, 0, 0, 1920, 1080);  
+    //     window.requestAnimationFrame(render);
+    //     }
+    // window.requestAnimationFrame(render);
 
 
     document.getElementById('capture').addEventListener('click', function () {
