@@ -41,9 +41,12 @@
       //将视频流设置为video元素的源
       console.log(stream);
 
-      video.src = CompatibleURL.createObjectURL(stream);
-    //   video.srcObject = stream;
-      video.play();
+    //   video.src = CompatibleURL.createObjectURL(stream);
+      video.srcObject = stream;
+    //   video.play();
+        video.onloadedmetadata = function(e) {
+        video.play();
+        };
     }
 
     function error(error) {
@@ -56,9 +59,14 @@
     } else {
       alert('不支持访问用户媒体');
     }
-    window.setInterval(function(){
-        context.drawImage(video, 0, 0, 375, 180);
-    },15);
+
+    function render() {  
+        context.drawImage(video, 0, 0, 480, 320);  
+        }
+    //第一帧渲染
+    window.requestAnimationFrame(render);
+
+
     document.getElementById('capture').addEventListener('click', function () {
       context.drawImage(video, 0, 0, 480, 320);      
     })
