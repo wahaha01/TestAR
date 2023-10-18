@@ -7,7 +7,14 @@
   <title>摄像头拍照</title>
 </head>
 <body>
-  <video id="video" width="480" height="320" autoplay controls>
+  <video id="video" width="480" height="320" 
+    autoplay 
+    controls
+    x5-video-player-fullscreen="true"
+    x5-playsinline
+    playsinline
+    webkit-playsinline
+    >
   </video>
   <div>
     <button id="capture">拍照</button>
@@ -71,8 +78,4 @@
     })
   </script>
 </body>
-<servlet-mapping>
-    <servlet-name>default</servlet-name>
-    <url-pattern>*.mp4</url-pattern>
-</servlet-mapping>
 </html>
