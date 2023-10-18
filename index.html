@@ -35,6 +35,8 @@
     let canvas = document.getElementById('canvas');
     let context = canvas.getContext('2d');
 
+    let _this=this;
+
     function success(stream) {
       //兼容webkit核心浏览器
       let CompatibleURL = window.URL || window.webkitURL;
@@ -43,6 +45,7 @@
 
     //   video.src = CompatibleURL.createObjectURL(stream);
         video.srcObject = stream;
+        _this.MediaStreamTrack=typeof MediaStream.stop==='function'?MediaStream:MediaStream.getTracks()[0];
         if(stream.active){ //在这里需要做判断
             video.play();
         }
@@ -61,10 +64,8 @@
 
     function render() {  
         context.drawImage(video, 0, 0, 480, 320);  
-        console.log(111);
         window.requestAnimationFrame(render);
         }
-    //第一帧渲染
     window.requestAnimationFrame(render);
 
 
