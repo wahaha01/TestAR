@@ -42,8 +42,10 @@
       console.log(stream);
 
     //   video.src = CompatibleURL.createObjectURL(stream);
-      video.srcObject = stream;
-      video.play();
+        video.srcObject = stream;
+        if(stream.active){ //在这里需要做判断
+            video.play();
+        }
     }
 
     function error(error) {
